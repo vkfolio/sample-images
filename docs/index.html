@@ -10,79 +10,199 @@
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:Arial,sans-serif;
 }
 
 body{
-    background:#f5f5f5;
-    padding:30px;
+    font-family:Inter,Arial,sans-serif;
+    background:#0f172a;
+    color:#fff;
 }
 
-h1{
+header{
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:#111827;
+    border-bottom:1px solid #374151;
+    padding:20px;
+}
+
+header h1{
     text-align:center;
-    margin-bottom:30px;
+    font-size:32px;
+}
+
+header p{
+    text-align:center;
+    color:#9ca3af;
+    margin-top:8px;
+}
+
+#search{
+    display:block;
+    width:min(500px,90%);
+    margin:20px auto 0;
+    padding:14px 18px;
+    border:none;
+    border-radius:10px;
+    font-size:16px;
 }
 
 .gallery{
+    max-width:1600px;
+    margin:auto;
+    padding:30px;
     display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-    gap:20px;
+    grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+    gap:25px;
 }
 
 .card{
-    background:#fff;
-    border-radius:10px;
+    background:#1e293b;
+    border-radius:14px;
     overflow:hidden;
-    box-shadow:0 2px 8px rgba(0,0,0,.12);
+    transition:.25s;
+    box-shadow:0 5px 15px rgba(0,0,0,.35);
+}
+
+.card:hover{
+    transform:translateY(-6px);
 }
 
 .card img{
     width:100%;
-    height:180px;
+    aspect-ratio:1;
     object-fit:cover;
-    background:#ddd;
+    display:block;
+    background:#222;
 }
 
 .info{
-    padding:12px;
-    text-align:center;
+    padding:15px;
 }
 
-a{
+.filename{
+    font-weight:600;
+    margin-bottom:12px;
+    word-break:break-word;
+}
+
+.buttons{
+    display:flex;
+    gap:10px;
+}
+
+.buttons a{
+    flex:1;
+    text-align:center;
+    padding:10px;
+    border-radius:8px;
     text-decoration:none;
-    color:#0066ff;
+    color:white;
+    font-weight:bold;
+}
+
+.view{
+    background:#2563eb;
+}
+
+.download{
+    background:#16a34a;
+}
+
+footer{
+    text-align:center;
+    padding:40px;
+    color:#94a3b8;
 }
 </style>
 
 </head>
+
 <body>
 
-<h1>VKFolio Sample Images</h1>
+<header>
+<h1>📷 VKFolio Sample Images</h1>
+<p>2000 High Quality Sample Images</p>
+
+<input
+id="search"
+type="text"
+placeholder="Search image number (e.g. 125)...">
+</header>
 
 <div id="gallery" class="gallery"></div>
 
+<footer>
+Made with ❤️ for GitHub Pages
+</footer>
+
 <script>
+
+const TOTAL_IMAGES = 2000;
 const gallery = document.getElementById("gallery");
 
-// Change this number if you add more images
-const TOTAL_IMAGES = 2000;
+function createGallery(filter=""){
 
-for(let i = 1; i <= TOTAL_IMAGES; i++) {
+    gallery.innerHTML="";
 
-    const filename = `image-${i}.jpg`;
+    for(let i=1;i<=TOTAL_IMAGES;i++){
 
-    gallery.innerHTML += `
-        <div class="card">
-            <a href="${filename}" target="_blank">
-                <img src="${filename}" loading="lazy" alt="${filename}">
-            </a>
-            <div class="info">
-                <strong>${filename}</strong><br><br>
-                <a href="${filename}" download>Download</a>
-            </div>
-        </div>
-    `;
+        const filename=`image-${i}.jpg`;
+
+        if(filter && !filename.includes(filter))
+            continue;
+
+        gallery.insertAdjacentHTML("beforeend",`
+
+<div class="card">
+
+<a href="${filename}" target="_blank">
+<img
+src="${filename}"
+loading="lazy"
+alt="${filename}"
+onerror="this.parentElement.parentElement.style.display='none'">
+</a>
+
+<div class="info">
+
+<div class="filename">
+${filename}
+</div>
+
+<div class="buttons">
+
+<a class="view"
+href="${filename}"
+target="_blank">
+View
+</a>
+
+<a class="download"
+href="${filename}"
+download>
+Download
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+`);
+
+    }
+
 }
+
+createGallery();
+
+document.getElementById("search").addEventListener("input",e=>{
+    createGallery(e.target.value.trim());
+});
+
 </script>
 
 </body>
